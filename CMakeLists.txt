@@ -12,22 +12,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CUDA_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 set(CUDNN_INCLUDE_DIR "C:/Program Files/NVIDIA/CUDNN/v9.4/include/12.6")
-set(CUDNN_LIBRARY "C:/Program Files/NVIDIA/CUDNN/v9.4/lib/12.6/x64/cudnn.lib")
-
-
 include_directories(${CUDNN_INCLUDE_DIR})
 
-file(GLOB_RECURSE SOURCES_TASK_01 "task-01/src/*.cpp" "task-01/src/*.cu")
-add_executable(task-01 ${SOURCES_TASK_01})
-target_include_directories(task-01 PRIVATE ${CMAKE_SOURCE_DIR}/task-01/include)
-set_target_properties(task-01 PROPERTIES CUDA_ARCHITECTURES "86")
-target_link_libraries(task-01 ${CUDNN_LIBRARY})
-target_link_options(task-01 PRIVATE /NODEFAULTLIB:LIBCMT)
+set(CUDNN_LIBRARY "C:/Program Files/NVIDIA/CUDNN/v9.4/lib/12.6/x64/cudnn.lib")
+link_libraries(${CUDNN_LIBRARY})
 
-file(GLOB_RECURSE SOURCES_TASK_02 "task-02/src/*.cpp" "task-02/src/*.cu")
-add_executable(task-02 ${SOURCES_TASK_02})
-target_include_directories(task-02 PRIVATE ${CMAKE_SOURCE_DIR}/task-02/include)
-set_target_properties(task-02 PROPERTIES CUDA_ARCHITECTURES "86")
-target_link_libraries(task-02 ${CUDNN_LIBRARY})
-target_link_options(task-02 PRIVATE /NODEFAULTLIB:LIBCMT)
+foreach(i RANGE 1 3)
+    if(${i} LESS 10)
+        set(idx "0${i}")
+    else()
+        set(idx "${i}")
+    endif()
+
+    set(TASK_NAME "task-${idx}")
+    
+    file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/task-${idx}/src/*.cpp" "${CMAKE_SOURCE_DIR}/task-${idx}/src/*.cu")
+    file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/task-${idx}/include/*.h" "${CMAKE_SOURCE_DIR}/task-${idx}/include/*.cuh")
+
+    source_group("Source Files" FILES ${SOURCES})
+    source_group("Header Files" FILES ${HEADERS})
+    add_executable(${TASK_NAME} ${SOURCES} ${HEADERS})
+
+    target_include_directories(${TASK_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/task-${idx}/include)
+    set_target_properties(${TASK_NAME} PROPERTIES CUDA_ARCHITECTURES "86")
+
+    target_link_options(${TASK_NAME} PRIVATE /NODEFAULTLIB:LIBCMT)
+endforeach()
+
