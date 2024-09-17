@@ -18,12 +18,16 @@ set(CUDNN_LIBRARY "C:/Program Files/NVIDIA/CUDNN/v9.4/lib/12.6/x64/cudnn.lib")
 
 include_directories(${CUDNN_INCLUDE_DIR})
 
-add_executable(task-01 task-01/src/main.cpp task-01/src/convolution.cu)
+file(GLOB_RECURSE SOURCES_TASK_01 "task-01/src/*.cpp" "task-01/src/*.cu")
+add_executable(task-01 ${SOURCES_TASK_01})
 target_include_directories(task-01 PRIVATE ${CMAKE_SOURCE_DIR}/task-01/include)
-
-set_target_properties(task-01 PROPERTIES
-    CUDA_ARCHITECTURES "86")
-
+set_target_properties(task-01 PROPERTIES CUDA_ARCHITECTURES "86")
 target_link_libraries(task-01 ${CUDNN_LIBRARY})
-
 target_link_options(task-01 PRIVATE /NODEFAULTLIB:LIBCMT)
+
+file(GLOB_RECURSE SOURCES_TASK_02 "task-02/src/*.cpp" "task-02/src/*.cu")
+add_executable(task-02 ${SOURCES_TASK_02})
+target_include_directories(task-02 PRIVATE ${CMAKE_SOURCE_DIR}/task-02/include)
+set_target_properties(task-02 PROPERTIES CUDA_ARCHITECTURES "86")
+target_link_libraries(task-02 ${CUDNN_LIBRARY})
+target_link_options(task-02 PRIVATE /NODEFAULTLIB:LIBCMT)
