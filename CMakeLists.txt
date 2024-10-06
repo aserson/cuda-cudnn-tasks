@@ -19,7 +19,7 @@ include_directories(${CUDNN_INCLUDE_DIR})
 set(CUDNN_LIBRARY "C:/Program Files/NVIDIA/CUDNN/v9.4/lib/12.6/x64/cudnn.lib")
 link_libraries(${CUDNN_LIBRARY})
 
-foreach(i RANGE 1 3)
+foreach(i RANGE 1 4)
     if(${i} LESS 10)
         set(idx "0${i}")
     else()
